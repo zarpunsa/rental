@@ -63,7 +63,7 @@ if (!isset($_SESSION["pelanggan"])) {
                 <label for="jaminan">Jaminan</label>
                 <select name="jaminan" class="form-control">
                     <option value="STNK">STNK</option>
-                    <option value="Sertifikat Rumah">KTP</option>
+                    <option value="KTP">KTP</option>
                 </select>
             </div>
             <button type="submit" class="btn btn-info btn-block">NEXT!</button>

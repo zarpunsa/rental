@@ -1,13 +1,6 @@
 <?php
 session_start(); // Memulai session di awal
 
-// Fungsi alert yang mungkin belum ada, ditambahkan untuk kelengkapan
-if (!function_exists('alert')) {
-    function alert($msg, $url) {
-        return "<script>alert('$msg'); window.location.href = '$url';</script>";
-    }
-}
-
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // 1. Cek apakah pengguna sedang dalam masa timeout
