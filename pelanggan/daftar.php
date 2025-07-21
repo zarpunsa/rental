@@ -45,11 +45,11 @@ if (isset($_GET['action']) AND $_GET['action'] == 'delete') {
 				</div>
 				<div class="form-group">
 					<label for="no_ktp">No KTP</label>
-					<input type="text" name="no_ktp" class="form-control" <?= (!$update) ?: 'value="'.$row["no_ktp"].'"' ?>>
+					<input type="text" name="no_ktp" class="form-control" pattern="\d{16}" title="Nomor KTP harus terdiri dari 16 digit." maxlength="16" required <?= (!$update) ?: 'value="'.$row["no_ktp"].'"' ?>>
 				</div>
 				<div class="form-group">
 					<label for="no_telp">No Telp</label>
-					<input type="text" name="no_telp" class="form-control" <?= (!$update) ?: 'value="'.$row["no_telp"].'"' ?>>
+					<input type="number" name="no_telp" class="form-control" <?= (!$update) ?: 'value="'.$row["no_telp"].'"' ?>>
 				</div>
 				<div class="form-group">
 					<label for="alamat">Alamat</label>
@@ -65,7 +65,7 @@ if (isset($_GET['action']) AND $_GET['action'] == 'delete') {
 				</div>
 				<div class="form-group">
 					<label for="password">Password</label>
-					<input type="password" name="password" class="form-control">
+					<input type="password" name="password" class="form-control" minlength="6" pattern="(?=.*[A-Za-z])(?=.*\d).{6,}" title="Password harus minimal 6 karakter dan mengandung kombinasi huruf dan angka." <?= (!$update) ? 'required' : '' ?>>
 				</div>
 				<?php if ($update): ?>
 					<div class="row">
