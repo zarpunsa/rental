@@ -1,77 +1,98 @@
 <?php
+// Selalu mulai session di baris paling atas
 session_start();
-require_once "../config.php";
-if (!isset($_SESSION["admin"])) {
-  header('location: login.php');
+
+// 1. MEMUAT KONFIGURASI DAN MEMERIKSA KONEKSI DATABASE
+require_once "config.php";
+
+// Pemeriksaan koneksi yang sangat penting untuk mencegah error 'query() on null'
+if ($connection->connect_error) {
+    die("KONEKSI DATABASE GAGAL: " . $connection->connect_error);
 }
+
+// 2. MENDAPATKAN HALAMAN YANG DIMINTA PENGGUNA
+// Jika tidak ada permintaan halaman, default-nya adalah 'home'
+$page = isset($_GET['page']) ? $_GET['page'] : 'home';
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Rental Mobil</title>
-    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
-    <script src="../assets/js/jquery.min.js"></script>
-    <!-- Optional, Add fancyBox for media, buttons, thumbs -->
-    <link rel="stylesheet" href="../assets/fancybox/source/jquery.fancybox.css" type="text/css" media="screen" />
-    <link rel="stylesheet" href="../assets/fancybox/source/helpers/jquery.fancybox-buttons.css" type="text/css" media="screen" />
-    <link rel="stylesheet" href="../assets/fancybox/source/helpers/jquery.fancybox-thumbs.css" type="text/css" media="screen" />
-    <script type="text/javascript" src="../assets/fancybox/source/jquery.fancybox.pack.js"></script>
-    <script type="text/javascript" src="../assets/fancybox/source/helpers/jquery.fancybox-buttons.js"></script>
-    <script type="text/javascript" src="../assets/fancybox/source/helpers/jquery.fancybox-media.js"></script>
-    <script type="text/javascript" src="../assets/fancybox/source/helpers/jquery.fancybox-thumbs.js"></script><!-- Optional, Add mousewheel effect -->
-    <script type="text/javascript" src="../assets/fancybox/lib/jquery.mousewheel-3.0.6.pack.js"></script>
-    <style>
-        body {
-            margin-top: 40px;
-        }
-    </style>
-</head>
+    <title>Aplikasi Rental Mobil</title>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    </head>
 <body>
-    <div class="container">
-        <nav class="navbar navbar-default">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="#">ADMIN | RENTAL MOBIL</a>
-                </div>
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a href="?page=home">Beranda <span class="sr-only">(current)</span></a></li>
-                        <li class="dropdown">
-                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Input <span class="caret"></span></a>
-                          <ul class="dropdown-menu">
-                            <li><a href="?page=admin">Admin</a></li>
-                            <li><a href="?page=jenis">Jenis</a></li>
-                            <li><a href="?page=mobil">Mobil</a></li>
-                            <li><a href="?page=supir">Supir</a></li>
-                            <li><a href="?page=pelanggan">Pelanggan</a></li>
-                          </ul>
-                        </li>
-                        <li class="dropdown">
-                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Laporan <span class="caret"></span></a>
-                          <ul class="dropdown-menu">
-                            <li><a href="?page=lap_konfirmasi">Konfirmasi</a></li>
-                            <li><a href="?page=lap_permobil">Penyewaan Permobil</a></li>
-                            <li><a href="?page=lap_seringdenda">Sering Denda</a></li>
-                            <li><a href="?page=lap_perperiode">Penyewaan Perperiode</a></li>
-                            <li><a href="?page=lap_terlaris">Terlaris</a></li>
-                            <li><a href="?page=lap_denda">Denda</a></li>
-                          </ul>
-                        </li>
-                        <li><a href="logout.php">Logout</a></li>
-                        <li><a href="#">|</a></li>
-                        <li><a href="#" style="font-weight: bold; color: red;"><?= ucfirst($_SESSION["admin"]["username"]) ?></a></li>
-                    </ul>
-                </div><!-- /.navbar-collapse -->
-            </div><!-- /.container-fluid -->
-        </nav>
-        <div class="row">
-            <div class="col-md-12">
-              <?php include adminPage($_ADMINPAGE); ?>
+
+    <nav class="navbar navbar-default">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="index.php">Rental Mobil</a>
             </div>
+            <ul class="nav navbar-nav">
+                <li><a href="index.php?page=home">Home</a></li>
+                <?php if (isset($_SESSION['pelanggan'])): // Menu untuk Pelanggan ?>
+                    <li><a href="index.php?page=profil">Profil Saya</a></li>
+                    <li><a href="index.php?page=riwayat">Riwayat Transaksi</a></li>
+                <?php endif; ?>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <?php if (isset($_SESSION['pelanggan'])): ?>
+                    <li><a>Selamat Datang, <?= htmlspecialchars($_SESSION['pelanggan']['nama']) ?></a></li>
+                    <li><a href="logout.php">Logout</a></li>
+                <?php elseif (isset($_SESSION['admin'])): ?>
+                    <li><a>Login sebagai: ADMIN</a></li>
+                    <li><a href="admin/index.php">Dashboard Admin</a></li>
+                    <li><a href="logout.php">Logout</a></li>
+                <?php else: // Menu untuk Tamu ?>
+                    <li><a href="login.php">Login</a></li>
+                    <li><a href="index.php?page=daftar">Daftar</a></li>
+                <?php endif; ?>
+            </ul>
         </div>
+    </nav>
+
+    <div class="container">
+        <?php
+        // Menggunakan switch untuk memuat file halaman yang sesuai
+        switch ($page) {
+            case 'daftar':
+                include 'daftar.php';
+                break;
+            
+            case 'transaksi':
+                // Halaman ini mungkin perlu ID mobil, jadi pastikan user sudah login
+                if (!isset($_SESSION['pelanggan'])) {
+                    echo "<div class='alert alert-danger'>Anda harus login untuk bisa menyewa mobil.</div>";
+                    include 'home.php';
+                } else {
+                    include 'transaksi.php';
+                }
+                break;
+
+            case 'profil':
+                include 'daftar.php'; // Menggunakan file daftar.php untuk update profil
+                break;
+
+            case 'riwayat':
+                include 'riwayat.php'; // Anda perlu membuat file ini
+                break;
+
+            case 'home':
+            default:
+                // Halaman default yang akan dimuat
+                include 'home.php';
+                break;
+        }
+        ?>
     </div>
-    <script src="../assets/js/bootstrap.min.js"></script>
+
+    <footer class="text-center" style="padding: 20px; margin-top: 50px; border-top: 1px solid #ccc;">
+        <p>&copy; <?= date("Y") ?> Rental Mobil. Semua Hak Cipta Dilindungi.</p>
+    </footer>
+
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
 </body>
 </html>

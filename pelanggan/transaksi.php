@@ -24,7 +24,7 @@ if (!isset($_SESSION["pelanggan"])) {
                   <div class="col-md-4">
                     <select name="thn" class="form-control" required="on">
                         <option>-- Tahun --</option>
-                        <?php for ($i=2021; $i<=2023; $i++): ?>
+                        <?php for ($i=2025; $i<=2026; $i++): ?>
                           <option value="<?=$i?>"><?=$i?></option>
                         <?php endfor; ?>
                     </select>
