@@ -1,0 +1,24 @@
+===========---//INSTALASI SOURCE CODE\\---==============|
+							|
+-Ekstrak source code					|
+-Jika menggunakan xampp simpan folder rental ke dalam	|
+ folder htdocs						|
+-Buat database baru dengan nama mobil			|
+-import file mobil.sql yang ada di folder db ke dalam	|
+ database yang dibuat tadi				|
+-Buka browser lalu jalankan dengan menuliskan 		|
+ localhost/rental					|
+							|
+Akun Admin			Akun User		|	
+user: admin			user: kecil222		|
+pass: admin			user: warakas3	|
+========================================================|
+
+cara penggunaan website :
+user yang ingin menyewa harus login , lalu daftar klau mau buatakun
+setelah user selesai menyewa bisa konfirmasi di halaman profil setelah itu di masukin
+bukti pembayaranya , abis itu masuk lewat admin dan liat laporan sesuai tanggal yang
+di masukan 
+
+
+admin bisa menambah jenis mobil , supir ,dan akun pelanggan 
